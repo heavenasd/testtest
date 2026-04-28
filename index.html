@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIZZ AIR — Interview Prep Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1525;
+    --bg3: #141c30;
+    --card: #131928;
+    --border: #1e2d4a;
+    --magenta: #cf2b6e;
+    --magenta2: #e8357e;
+    --magenta-glow: rgba(207,43,110,0.15);
+    --cyan: #00d4ff;
+    --cyan-dim: rgba(0,212,255,0.1);
+    --gold: #f0b429;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --text: #e8ecf4;
+    --text-dim: #8899bb;
+    --text-muted: #4a5a7a;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘Barlow’, sans-serif;
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* Background grid */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image:
+linear-gradient(rgba(207,43,110,0.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(207,43,110,0.03) 1px, transparent 1px);
+background-size: 40px 40px;
+pointer-events: none;
+z-index: 0;
+}
+
+.app { position: relative; z-index: 1; }
+
+/* ===== HEADER ===== */
+.header {
+padding: 20px 24px 16px;
+border-bottom: 1px solid var(–border);
+background: rgba(10,14,26,0.95);
+backdrop-filter: blur(10px);
+position: sticky; top: 0; z-index: 100;
+display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.logo {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 22px; font-weight: 700;
+letter-spacing: 2px;
+color: var(–magenta);
+display: flex; align-items: center; gap: 8px;
+}
+.logo span { color: var(–text); }
+.logo-badge {
+background: var(–magenta);
+color: white; font-size: 9px; font-weight: 700;
+padding: 2px 6px; border-radius: 3px;
+letter-spacing: 1px; text-transform: uppercase;
+}
+.header-right {
+display: flex; align-items: center; gap: 12px;
+}
+.score-pill {
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 20px;
+padding: 6px 14px;
+font-size: 13px; font-weight: 600;
+color: var(–text-dim);
+font-family: ‘Rajdhani’, sans-serif;
+letter-spacing: 1px;
+}
+.score-pill span { color: var(–gold); }
+
+/* ===== TOPIC SELECTOR ===== */
+#topicView {
+max-width: 900px;
+margin: 0 auto;
+padding: 40px 20px;
+}
+.screen-title {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 32px; font-weight: 700;
+letter-spacing: 2px;
+margin-bottom: 6px;
+}
+.screen-sub {
+color: var(–text-dim);
+font-size: 15px;
+margin-bottom: 32px;
+font-weight: 300;
+}
+
+.topic-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 14px;
+margin-bottom: 28px;
+}
+
+.topic-card {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 18px 20px;
+cursor: pointer;
+transition: all 0.2s;
+position: relative;
+overflow: hidden;
+}
+.topic-card::before {
+content: ‘’;
+position: absolute;
+left: 0; top: 0; bottom: 0;
+width: 3px;
+background: var(–border);
+transition: background 0.2s;
+}
+.topic-card:hover { border-color: rgba(207,43,110,0.4); transform: translateY(-2px); }
+.topic-card:hover::before { background: var(–magenta); }
+.topic-card.selected {
+border-color: var(–magenta);
+background: linear-gradient(135deg, rgba(207,43,110,0.08), var(–card));
+}
+.topic-card.selected::before { background: var(–magenta); }
+
+.topic-code {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 11px; font-weight: 600;
+color: var(–magenta); letter-spacing: 2px;
+text-transform: uppercase; margin-bottom: 4px;
+}
+.topic-name {
+font-size: 15px; font-weight: 600;
+color: var(–text); margin-bottom: 4px;
+}
+.topic-count {
+font-size: 12px; color: var(–text-muted);
+}
+.topic-check {
+position: absolute; top: 14px; right: 14px;
+width: 20px; height: 20px;
+background: var(–magenta);
+border-radius: 50%;
+display: none;
+align-items: center; justify-content: center;
+font-size: 11px;
+}
+.topic-card.selected .topic-check { display: flex; }
+
+.topic-actions {
+display: flex; gap: 10px; flex-wrap: wrap;
+margin-bottom: 24px;
+}
+.btn {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 14px; font-weight: 600;
+letter-spacing: 1px; text-transform: uppercase;
+padding: 10px 22px;
+border-radius: 6px;
+cursor: pointer;
+border: none;
+transition: all 0.2s;
+}
+.btn-primary {
+background: var(–magenta);
+color: white;
+}
+.btn-primary:hover { background: var(–magenta2); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.btn-outline {
+background: transparent;
+color: var(–text-dim);
+border: 1px solid var(–border);
+}
+.btn-outline:hover { border-color: var(–magenta); color: var(–text); }
+.btn-ghost {
+background: transparent;
+color: var(–text-muted);
+font-size: 13px;
+}
+.btn-ghost:hover { color: var(–magenta); }
+
+.start-row {
+display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.mode-select {
+background: var(–bg3);
+border: 1px solid var(–border);
+color: var(–text);
+font-family: ‘Barlow’, sans-serif;
+font-size: 14px;
+padding: 10px 14px;
+border-radius: 6px;
+outline: none;
+cursor: pointer;
+}
+.mode-select:focus { border-color: var(–magenta); }
+
+/* ===== QUIZ VIEW ===== */
+#quizView { display: none; max-width: 780px; margin: 0 auto; padding: 30px 20px; }
+
+.progress-bar-wrap {
+display: flex; align-items: center; gap: 12px;
+margin-bottom: 24px;
+}
+.progress-bar-track {
+flex: 1; height: 4px;
+background: var(–border);
+border-radius: 2px;
+overflow: hidden;
+}
+.progress-bar-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–magenta), var(–cyan));
+border-radius: 2px;
+transition: width 0.4s ease;
+}
+.progress-label {
+font-size: 12px; color: var(–text-muted);
+font-family: ‘Rajdhani’, sans-serif;
+white-space: nowrap;
+min-width: 60px; text-align: right;
+}
+
+.topic-tag {
+display: inline-block;
+background: var(–magenta-glow);
+border: 1px solid rgba(207,43,110,0.3);
+color: var(–magenta);
+font-size: 11px; font-weight: 600;
+font-family: ‘Barlow Condensed’, sans-serif;
+letter-spacing: 1.5px; text-transform: uppercase;
+padding: 3px 10px; border-radius: 20px;
+margin-bottom: 16px;
+}
+
+.question-card {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 28px;
+margin-bottom: 18px;
+animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.q-number {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 12px; color: var(–text-muted);
+letter-spacing: 2px; text-transform: uppercase;
+margin-bottom: 10px;
+}
+.q-text {
+font-size: 18px; font-weight: 500;
+line-height: 1.55; color: var(–text);
+margin-bottom: 24px;
+}
+
+.options-grid {
+display: flex; flex-direction: column; gap: 10px;
+}
+.option-btn {
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 14px 18px;
+cursor: pointer;
+text-align: left;
+color: var(–text);
+font-family: ‘Barlow’, sans-serif;
+font-size: 15px;
+display: flex; align-items: flex-start; gap: 12px;
+transition: all 0.15s;
+line-height: 1.4;
+}
+.option-btn:hover:not(:disabled) {
+border-color: rgba(207,43,110,0.5);
+background: rgba(207,43,110,0.05);
+transform: translateX(3px);
+}
+.option-btn:disabled { cursor: default; }
+
+.option-letter {
+font-family: ‘Rajdhani’, sans-serif;
+font-weight: 700; font-size: 13px;
+color: var(–text-muted);
+min-width: 20px;
+padding-top: 1px;
+}
+
+.option-btn.correct {
+border-color: var(–green);
+background: rgba(46,204,113,0.08);
+color: var(–green);
+}
+.option-btn.correct .option-letter { color: var(–green); }
+.option-btn.wrong {
+border-color: var(–red);
+background: rgba(231,76,60,0.08);
+color: var(–red);
+}
+.option-btn.wrong .option-letter { color: var(–red); }
+.option-btn.dimmed { opacity: 0.4; }
+
+.explanation-box {
+background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(0,212,255,0.02));
+border: 1px solid rgba(0,212,255,0.2);
+border-radius: 8px;
+padding: 14px 18px;
+margin-top: 14px;
+font-size: 14px;
+line-height: 1.6;
+color: var(–text-dim);
+animation: fadeIn 0.2s ease;
+}
+.explanation-box strong {
+color: var(–cyan);
+font-size: 12px;
+font-family: ‘Barlow Condensed’, sans-serif;
+letter-spacing: 1px; text-transform: uppercase;
+display: block; margin-bottom: 4px;
+}
+
+.quiz-nav {
+display: flex; justify-content: space-between; align-items: center;
+gap: 12px; flex-wrap: wrap;
+}
+.nav-btns { display: flex; gap: 10px; }
+
+/* ===== RESULTS VIEW ===== */
+#resultsView { display: none; max-width: 780px; margin: 0 auto; padding: 40px 20px; }
+
+.result-card {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 40px 32px;
+text-align: center;
+margin-bottom: 24px;
+}
+.result-score {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 80px; font-weight: 700;
+line-height: 1;
+margin-bottom: 8px;
+}
+.result-score.great { color: var(–green); }
+.result-score.ok { color: var(–gold); }
+.result-score.poor { color: var(–red); }
+.result-label {
+font-size: 18px; color: var(–text-dim);
+margin-bottom: 24px;
+}
+.result-stats {
+display: flex; justify-content: center; gap: 32px;
+flex-wrap: wrap;
+}
+.stat { text-align: center; }
+.stat-val { font-family: ‘Rajdhani’, sans-serif; font-size: 28px; font-weight: 700; }
+.stat-lbl { font-size: 12px; color: var(–text-muted); letter-spacing: 1px; text-transform: uppercase; }
+.stat-val.green { color: var(–green); }
+.stat-val.red { color: var(–red); }
+
+.topic-breakdown {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 24px;
+margin-bottom: 20px;
+}
+.breakdown-title {
+font-family: ‘Rajdhani’, sans-serif;
+font-size: 16px; font-weight: 600;
+letter-spacing: 1px; text-transform: uppercase;
+color: var(–text-dim);
+margin-bottom: 16px;
+}
+.breakdown-row {
+display: flex; align-items: center; gap: 12px;
+margin-bottom: 10px;
+}
+.breakdown-name { font-size: 13px; color: var(–text-dim); width: 200px; flex-shrink: 0; }
+.breakdown-bar-track { flex: 1; height: 6px; background: var(–border); border-radius: 3px; overflow: hidden; }
+.breakdown-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.breakdown-pct { font-size: 13px; font-weight: 600; width: 36px; text-align: right; }
+
+/* Question navigator */
+.q-nav-grid {
+display: flex; flex-wrap: wrap; gap: 6px;
+margin-bottom: 20px;
+}
+.q-nav-btn {
+width: 32px; height: 32px;
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 4px;
+cursor: pointer;
+font-size: 11px; font-weight: 600;
+color: var(–text-muted);
+font-family: ‘Rajdhani’, sans-serif;
+transition: all 0.15s;
+display: flex; align-items: center; justify-content: center;
+}
+.q-nav-btn:hover { border-color: var(–magenta); color: var(–text); }
+.q-nav-btn.answered-correct { background: rgba(46,204,113,0.15); border-color: rgba(46,204,113,0.4); color: var(–green); }
+.q-nav-btn.answered-wrong { background: rgba(231,76,60,0.15); border-color: rgba(231,76,60,0.4); color: var(–red); }
+.q-nav-btn.current { border-color: var(–magenta); color: var(–magenta); }
+
+.q-nav-panel {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 16px;
+margin-bottom: 20px;
+}
+.q-nav-panel-title {
+font-size: 11px; color: var(–text-muted);
+font-family: ‘Rajdhani’, sans-serif;
+letter-spacing: 2px; text-transform: uppercase;
+margin-bottom: 12px;
+}
+
+@media (max-width: 600px) {
+.screen-title { font-size: 24px; }
+.q-text { font-size: 16px; }
+.result-score { font-size: 60px; }
+.header { flex-wrap: wrap; }
+}
+</style>
+
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+
+  <div class="header">
+    <div class="logo">
+      W<span>!</span>ZZ <div class="logo-badge">PREP</div>
+    </div>
+    <div class="header-right">
+      <div class="score-pill" id="headerScore" style="display:none">Score: <span id="headerScoreVal">0/0</span></div>
+      <button class="btn btn-ghost" id="homeBtn" style="display:none" onclick="goHome()">← Topics</button>
+    </div>
+  </div>
+
+  <!-- TOPIC VIEW -->
+
+  <div id="topicView">
+    <div class="screen-title">Interview Preparation</div>
+    <div class="screen-sub">Select topics to study • <span id="totalQCount"></span> questions available</div>
+
+```
+<div class="topic-actions">
+  <button class="btn btn-outline" onclick="selectAll()">Select All</button>
+  <button class="btn btn-outline" onclick="selectNone()">Clear</button>
+</div>
+
+<div class="topic-grid" id="topicGrid"></div>
+
+<div class="start-row">
+  <button class="btn btn-primary" id="startBtn" onclick="startQuiz()">Start Quiz</button>
+  <select class="mode-select" id="modeSelect">
+    <option value="sequential">Sequential Order</option>
+    <option value="random" selected>Random Order</option>
+  </select>
+  <select class="mode-select" id="qCountSelect">
+    <option value="20">20 Questions</option>
+    <option value="40">40 Questions</option>
+    <option value="60">60 Questions</option>
+    <option value="all">All Questions</option>
+  </select>
+</div>
+```
+
+  </div>
+
+  <!-- QUIZ VIEW -->
+
+  <div id="quizView">
+    <div class="q-nav-panel">
+      <div class="q-nav-panel-title">Question Navigator</div>
+      <div class="q-nav-grid" id="qNavGrid"></div>
+    </div>
+
+```
+<div class="progress-bar-wrap">
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel"></div>
+</div>
+
+<div class="topic-tag" id="currentTopic"></div>
+
+<div class="question-card">
+  <div class="q-number" id="qNumber"></div>
+  <div class="q-text" id="qText"></div>
+  <div class="options-grid" id="optionsGrid"></div>
+  <div id="explanationBox"></div>
+</div>
+
+<div class="quiz-nav">
+  <div class="nav-btns">
+    <button class="btn btn-outline" id="prevBtn" onclick="navigate(-1)">← Prev</button>
+    <button class="btn btn-outline" id="nextBtn" onclick="navigate(1)">Next →</button>
+  </div>
+  <button class="btn btn-primary" id="finishBtn" onclick="finishQuiz()" style="display:none">View Results</button>
+</div>
+```
+
+  </div>
+
+  <!-- RESULTS VIEW -->
+
+  <div id="resultsView">
+    <div class="result-card">
+      <div class="result-score" id="resultScore"></div>
+      <div class="result-label" id="resultLabel"></div>
+      <div class="result-stats">
+        <div class="stat"><div class="stat-val green" id="statCorrect"></div><div class="stat-lbl">Correct</div></div>
+        <div class="stat"><div class="stat-val red" id="statWrong"></div><div class="stat-lbl">Wrong</div></div>
+        <div class="stat"><div class="stat-val" id="statTotal" style="color:var(--cyan)"></div><div class="stat-lbl">Total</div></div>
+      </div>
+    </div>
+    <div class="topic-breakdown" id="topicBreakdown"></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="goHome()">← Back to Topics</button>
+      <button class="btn btn-outline" onclick="reviewWrong()">Review Wrong Answers</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  // ===== 010 AIR LAW =====
+  {topic:"010 – Air Law", q:"What is the outbound time for a standard holding pattern at or below 14,000 ft?", options:["30 seconds","1 minute","1 minute 30 seconds","2 minutes"], answer:1, exp:"Below 14,000 ft the outbound leg is 1 minute. Above 14,000 ft it extends to 1 minute 30 seconds."},
+  {topic:"010 – Air Law", q:"What is the ICAO maximum holding speed between 14,000 ft and 20,000 ft?", options:["230 kts","240 kts","265 kts","M0.83"], answer:1, exp:"14,000–20,000 ft: 240 kts. Below 14,000 ft: 230 kts. 20,000–34,000 ft: 265 kts. Above 34,000 ft: M0.83."},
+  {topic:"010 – Air Law", q:"How large is the buffer area that extends beyond the boundary of a holding area?", options:["2.5 NM","3.0 NM","5.0 NM","10.0 NM"], answer:2, exp:"An additional buffer area extends 5.0 NM beyond the boundary of the holding area."},
+  {topic:"010 – Air Law", q:"What is the zone of flexibility on either side of holding pattern entry sector boundaries?", options:["3°","5°","10°","15°"], answer:1, exp:"There is a zone of flexibility of 5° on either side of the sector boundaries for the three entry sectors."},
+  {topic:"010 – Air Law", q:"At what frequency should an intercepted aircraft attempt to contact the intercepting aircraft?", options:["118.0 MHz","121.5 MHz and 243 MHz","123.45 MHz","156.8 MHz"], answer:1, exp:"An intercepted aircraft shall immediately attempt radio contact on 121.5 MHz and 243 MHz."},
+  {topic:"010 – Air Law", q:"An aircraft is maintaining its assigned level when SSR Mode C indicates it is within:", options:["±100 ft","±200 ft","±300 ft","±500 ft"], answer:2, exp:"An aircraft is considered maintaining its assigned level as long as Mode C shows it is within ±300 ft."},
+  {topic:"010 – Air Law", q:"The MSA (Minimum Sector Altitude) provides what obstacle clearance in non-mountainous areas?", options:["500 ft","1000 ft","2000 ft","1500 ft"], answer:1, exp:"MSA provides 1000 ft obstacle clearance (2000 ft in mountainous areas) within a 25 NM radius of the navaid."},
+  {topic:"010 – Air Law", q:"What is the maximum speed adjustment a pilot should be requested to make on final approach under radar control?", options:["±10 kt","±15 kt","±20 kt","±30 kt"], answer:2, exp:"The maximum speed adjustment on intermediate and final approach under radar control is ±20 kt."},
+  {topic:"010 – Air Law", q:"Transponder code 7500 indicates:", options:["Aircraft in distress","Communication failure","Unlawful interference","Equipment failure"], answer:2, exp:"7700 = distress; 7600 = comm failure; 7500 = unlawful interference."},
+  {topic:"010 – Air Law", q:"An AIP shall contain which three main parts?", options:["GEN, ENR, AD","GEN, NAV, WX","INTRO, ENR, NOTAM","AIR, ENR, AD"], answer:0, exp:"The AIP contains GEN (General), ENR (En-route) and AD (Aerodromes)."},
+  {topic:"010 – Air Law", q:"For VMC in Class C/D/E airspace below 10,000 ft, what is the minimum visibility?", options:["3 km","5 km","8 km","10 km"], answer:1, exp:"Below 10,000 ft in Class C, D, and E airspace: 5 km visibility and 300 m vertical / 1500 m horizontal from clouds."},
+  {topic:"010 – Air Law", q:"For IFR flight over high terrain, what obstacle clearance is required within 8 km of estimated position?", options:["1000 ft","1500 ft","2000 ft","2500 ft"], answer:2, exp:"Over high terrain / mountainous areas: at least 2000 ft above the highest obstacle within 8 km. Elsewhere: 1000 ft."},
+  {topic:"010 – Air Law", q:"Departing aircraft: same runway, light/medium following heavy — what is the required separation?", options:["1 min","2 min","3 min","4 min"], answer:1, exp:"Same runway: light/medium behind heavy = 2 min. At an intersection: 3 min."},
+  {topic:"010 – Air Law", q:"Arriving heavy following heavy on the same runway — what is the required radar separation?", options:["3 NM","4 NM","5 NM","6 NM"], answer:1, exp:"Arriving: heavy-heavy = 4 NM; heavy-medium = 5 NM; heavy-light = 6 NM."},
+  {topic:"010 – Air Law", q:"Which ICAO Annex covers Aircraft Accident and Incident Investigation?", options:["Annex 11","Annex 12","Annex 13","Annex 14"], answer:2, exp:"Annex 13 = Aircraft Accident and Incident Investigation. Annex 14 = Aerodromes."},
+  {topic:"010 – Air Law", q:"Which ICAO Annex covers Personnel Licensing?", options:["Annex 1","Annex 2","Annex 3","Annex 6"], answer:0, exp:"Annex 1 = Personnel Licensing. Annex 2 = Rules of the Air."},
+  {topic:"010 – Air Law", q:"Which ICAO Annex covers the Safe Transport of Dangerous Goods by Air?", options:["Annex 15","Annex 16","Annex 17","Annex 18"], answer:3, exp:"Annex 18 = Safe Transport of Dangerous Goods by Air. Annex 17 = Security."},
+  {topic:"010 – Air Law", q:"In a standard right-hand holding pattern, all turns are made at a bank angle of 25° or:", options:["Rate 1 (3°/sec), whichever requires LESSER bank","Rate 2 (6°/sec), whichever requires LESSER bank","Rate 1 (3°/sec), whichever requires MORE bank","Rate 2 (6°/sec), whichever requires MORE bank"], answer:0, exp:"All turns in a holding pattern: 25° bank OR rate 1 turn (3°/sec), whichever requires the lesser bank angle."},
+  {topic:"010 – Air Law", q:"Which approach segment lies between the FAF and the runway/MAP?", options:["Initial approach","Intermediate approach","Final approach","Missed approach"], answer:2, exp:"Final approach = FAF to runway/MAP. For CAT C/D/E: max descent gradient 6.1%. CAT II/III glidepath must be 3.0°."},
+  {topic:"010 – Air Law", q:"PAPI stands for:", options:["Precision Approach Path Indicator","Pilot Approach Position Instrument","Precision Altitude Point Indicator","Primary Approach Position Instrument"], answer:0, exp:"PAPI = Precision Approach Path Indicator. VASI = Visual Approach Slope Indicator."},
+  {topic:"010 – Air Law", q:"What does MHA stand for in the context of holding patterns?", options:["Maximum Holding Altitude","Minimum Holding Altitude","Mandatory Heading Avoidance","Minimum Height Above threshold"], answer:1, exp:"MHA = Minimum Holding Altitude — the lowest altitude for a holding pattern ensuring navaid coverage, comms and obstacle clearance."},
+  {topic:"010 – Air Law", q:"MORA provides obstacle clearance within how many NM of the route centerline?", options:["5 NM","8 NM","10 NM","25 NM"], answer:2, exp:"MORA (Minimum Off Route Altitude) provides reference-point clearance within 10 NM of the route centerline."},
+  {topic:"010 – Air Law", q:"Decision Altitude/Height (DA/H) is used in:", options:["Non-precision approaches only","Circling approaches","Precision approaches","All approach types"], answer:2, exp:"DA/H is used in precision approaches. MDA/MDH is used in non-precision and circling approaches."},
+  {topic:"010 – Air Law", q:"ATS comprises how many services?", options:["2","3","4","5"], answer:1, exp:"ATS comprises 3 services: (1) Air Traffic Services, (2) Flight Information Service, (3) Alerting Service."},
+  {topic:"010 – Air Law", q:"Aircraft navigation lights: the white tail light covers a sector of:", options:["110°","120°","140°","150°"], answer:2, exp:"Navigation lights: Red = 110° (left wing), Green = 110° (right wing), White = 140° (tail)."},
+  {topic:"010 – Air Law", q:"What is the ICAO maximum holding speed ABOVE 34,000 ft?", options:["265 kts","280 kts","M0.80","M0.83"], answer:3, exp:"Above 34,000 ft the maximum holding speed is M0.83."},
+
+  // ===== 021 AIRCRAFT GENERAL KNOWLEDGE =====
+  {topic:"021 – Aircraft General Knowledge", q:"What is the hydroplaning speed formula?", options:["Hydro speed (kt) = 7 × √p(psi)","Hydro speed (kt) = 9 × √p(psi)","Hydro speed (kt) = 11 × √p(psi)","Hydro speed (kt) = 6 × p(psi)"], answer:1, exp:"Hydroplaning speed (kt) = 9 × √p(psi). A320 tyre pressure 210–220 psi gives ~134 kt."},
+  {topic:"021 – Aircraft General Knowledge", q:"In a turbofan engine, the bypass ratio 4.8:1 means:", options:["4.8 kg bypass air per 1 kg through core","1 kg bypass per 4.8 kg through core","Bypass duct is 4.8 times longer than core","Fan speed is 4.8× core speed"], answer:0, exp:"BPR = mass flow through fan (bypassing core) ÷ mass flow through core. BPR 4.8:1 → 4.8 kg bypass per 1 kg combusted."},
+  {topic:"021 – Aircraft General Knowledge", q:"EPR (Engine Pressure Ratio) measures:", options:["Oil pressure ratio","Core exhaust pressure vs. intake pressure (thrust measurement)","N1 vs. N2 speed ratio","Fan pressure vs. compressor pressure"], answer:1, exp:"EPR = core engine exhaust pressure compared to intake pressure — used as a thrust measurement indication on Airbus."},
+  {topic:"021 – Aircraft General Knowledge", q:"What are the secondary engine instruments?", options:["EPR, EGT, N1, N2","Oil temp/pressure/quantity and engine vibration meter","Fuel flow and EGT","N1, N2 and fuel flow"], answer:1, exp:"Primary: EPR, EGT, N1, N2, fuel flow. Secondary: engine vibration meter, oil temperature/pressure/quantity."},
+  {topic:"021 – Aircraft General Knowledge", q:"A compressor surge is:", options:["Slow increase in EGT","Compressor stall affecting airflow through the entire engine","Momentary N2 overspeed","Fan blade separation event"], answer:1, exp:"When a compressor stall affects airflow through the entire engine it is called a compressor surge."},
+  {topic:"021 – Aircraft General Knowledge", q:"The critical engine on a multi-engine aircraft is:", options:["The engine farthest from the fuselage","The engine whose failure causes most adverse handling/performance effects","Always the left engine","The engine with highest thrust rating"], answer:1, exp:"The critical engine is the one whose failure causes the most adverse effects. On clockwise-rotating props it is the left engine; on counter-clockwise, the right engine."},
+  {topic:"021 – Aircraft General Knowledge", q:"A jet turbine engine is most efficient at:", options:["Low altitude, low rpm","Low altitude, high rpm","High altitude, low rpm","High altitude, high rpm (90–95%)"], answer:3, exp:"Jet engines are most efficient at high altitudes (low drag) and high rpm (90–95%), giving best SFC."},
+  {topic:"021 – Aircraft General Knowledge", q:"What does TSFC stand for and how is it calculated?", options:["Thrust Specific Fuel Consumption = Fuel burn (lb/hr) ÷ Engine Thrust (lb)","Total System Fuel Cost = Total fuel ÷ trip hours","Turbine Speed Fuel Coefficient = N1 ÷ fuel flow","Total Specific Fuel Capacity = tank size ÷ consumption"], answer:0, exp:"TSFC (Thrust Specific Fuel Consumption) = Fuel burn (lbs/hour) ÷ Engine Thrust (lb). Measures fuel efficiency per unit thrust."},
+  {topic:"021 – Aircraft General Knowledge", q:"High bypass engines produce more:", options:["Jet thrust than fan thrust","Fan thrust than jet thrust","Core thrust than bypass thrust","Combustion thrust than turbine thrust"], answer:1, exp:"High bypass turbofan engines produce more FAN thrust than jet (core exhaust) thrust."},
+  {topic:"021 – Aircraft General Knowledge", q:"A turbocharger differs from a supercharger in that it is driven by:", options:["A belt from the crankshaft","Electric motor","Exhaust gas turbine","Dedicated gearbox"], answer:2, exp:"Turbocharger = turbine-driven by exhaust gases. Supercharger = mechanically driven air compressor connected to the engine."},
+  {topic:"021 – Aircraft General Knowledge", q:"A shuttle valve allows:", options:["Oil flow between tanks","Fluid to flow from one of two sources","Air to bypass the compressor","Hydraulic fluid to return to reservoir"], answer:1, exp:"A shuttle valve is a valve allowing fluid to flow from one of two sources — used mainly in pneumatic and hydraulic systems."},
+  {topic:"021 – Aircraft General Knowledge", q:"Highest engine performance is achieved with:", options:["High humidity, high temperature, low pressure","Low humidity, low temperature, high pressure density","Low humidity, high temperature, high pressure","High humidity, low temperature, low pressure"], answer:1, exp:"Best engine performance: LOW humidity, LOW temperature, HIGH pressure density. 'Hot and high' is worst case."},
+  {topic:"021 – Aircraft General Knowledge", q:"Reduced thrust (FLEX) takeoff is used primarily to:", options:["Increase climb gradient","Protect engine life and reduce noise","Reduce fuel burn only","Satisfy ATC speed restrictions"], answer:1, exp:"FLEX thrust protects engine life, improves reliability, and reduces noise. An MTOW aircraft can still use FLEX if TODR is not limiting."},
+  {topic:"021 – Aircraft General Knowledge", q:"The four-stroke engine sequence is:", options:["Intake – power – compression – exhaust","Compression – intake – power – exhaust","Intake – compression – power – exhaust","Power – intake – compression – exhaust"], answer:2, exp:"Four-stroke sequence: Intake → Compression → Power → Exhaust."},
+  {topic:"021 – Aircraft General Knowledge", q:"On aircraft with counter-clockwise-rotating propellers, which is the critical engine?", options:["Left engine","Right engine","Both engines are equally critical","Neither engine is critical"], answer:1, exp:"On counter-clockwise rotating propellers, the right engine is the critical engine due to P-factor and asymmetric thrust."},
+
+  // ===== 022 INSTRUMENTATION =====
+  {topic:"022 – Instrumentation", q:"What does IAS → CAS → EAS → TAS represent?", options:["Corrections for density, compressibility, position error then density","Position/instrument error → compressibility → density","Temperature → pressure → humidity → wind","Altitude → temperature → pressure → wind"], answer:1, exp:"IAS → (position/instrument error) → CAS → (compressibility) → EAS → (density) → TAS. Mnemonic: ICE Tea Preferred Cold Drink."},
+  {topic:"022 – Instrumentation", q:"With the pitot source blocked and aircraft climbing, ASI will:", options:["Read zero","Remain constant","Increase (over-read)","Decrease (under-read)"], answer:2, exp:"Blocked pitot: ASI increases in climb, decreases in descent (trapped pressure acts as static source). VSI and altimeter unaffected."},
+  {topic:"022 – Instrumentation", q:"With BOTH static sources blocked, what happens to VSI and Altimeter?", options:["Both freeze (do not change)","VSI freezes; altimeter increases","Both decrease steadily","VSI reads zero; altimeter over-reads"], answer:0, exp:"Both static blocked: ASI decreases in climb / increases in descent; VSI and Altimeter FREEZE (do not change)."},
+  {topic:"022 – Instrumentation", q:"A TCAS Resolution Advisory (RA) is shown as:", options:["Blue diamond","Yellow circle","Red square + arrow","White triangle"], answer:2, exp:"TCAS: RA = red full square + arrow; TA = yellow full circle; Proximate traffic = blue/white diamond."},
+  {topic:"022 – Instrumentation", q:"FDR (Flight Data Recorder) data must be retained for:", options:["2 hours","8 hours","25 hours","72 hours"], answer:2, exp:"FDR data must be kept for 25 hours. CVR data must be kept for 2 hours."},
+  {topic:"022 – Instrumentation", q:"CVR is required for an aircraft when:", options:["It has more than 2 engines","It is multi-engine turbine with >9 seats or MTOW >5700 kg","All jet aircraft regardless of size","Any aircraft on IFR flights"], answer:1, exp:"CVR and FDR are required for all multi-engine turbine aircraft with more than 9 passenger seats or MTOW over 5,700 kg."},
+  {topic:"022 – Instrumentation", q:"Slipping in a turn is caused by:", options:["Too little bank or too much rudder","Too much bank or too little rudder","Too much bank and too much rudder","Too little bank and too little rudder"], answer:1, exp:"Slipping = too much bank OR too little rudder. Skidding = insufficient bank OR too much rudder."},
+  {topic:"022 – Instrumentation", q:"Magnetic compass turning error mnemonic ANDS means:", options:["Always Note Declination South","Accelerate North, Decelerate South","Avoid North, Descend South","Azimuth Normal, Declination Standard"], answer:1, exp:"ANDS = Accelerate North, Decelerate South. Also: 'Turn to N, Under Shoot; Turn to S, Over Shoot.'"},
+  {topic:"022 – Instrumentation", q:"Pressure altitude is:", options:["Altitude corrected for temperature and humidity","Altitude shown on altimeter with standard setting (1013 hPa)","True altitude adjusted for QNH","Altitude above the aerodrome"], answer:1, exp:"Pressure altitude = altitude shown on the altimeter when set to standard pressure (1013.25 hPa). Density altitude adds temperature/humidity correction."},
+  {topic:"022 – Instrumentation", q:"Temperature correction MUST be added to DA/DH when OAT is:", options:["Above +15°C","Below +5°C","0°C or colder","Below -20°C"], answer:2, exp:"When air temperature is 0°C or colder, temperature correction MUST be added to DA/DH (or MDA/MDH), step-down fixes inside FAF, and low-altitude approach altitudes in mountainous areas."},
+  {topic:"022 – Instrumentation", q:"Mach meter errors are:", options:["Temperature error and density error","Instrument error and pressure (position) error","Gyro drift and precession error","Compass deviation and variation error"], answer:1, exp:"Mach meter has instrument error (construction inaccuracies) and pressure error (also known as position error)."},
+
+  // ===== 031 MASS & BALANCE =====
+  {topic:"031 – Mass & Balance", q:"Where is the CG optimum position?", options:["Near forward limit","Near aft limit","At 50% MAC","At the neutral point"], answer:1, exp:"CG optimum is near the AFT limit — this reduces trim drag and increases range/endurance."},
+  {topic:"031 – Mass & Balance", q:"With CG outside FORWARD limit, which statement is correct?", options:["Range increases","Stalling speed decreases","Longitudinal stability decreases","Stalling speed increases"], answer:3, exp:"Forward CG: stall speed increases, longitudinal stability increases (higher stick forces in pitch), range/endurance decrease."},
+  {topic:"031 – Mass & Balance", q:"With CG outside AFT limit, what happens to spin recovery?", options:["Easier to recover","Harder to recover","No change","Aircraft cannot spin"], answer:1, exp:"Aft CG: longitudinal stability reduces, stick forces lighter (risk of over-stress), spin recovery is more difficult."},
+  {topic:"031 – Mass & Balance", q:"Which CG position gives the fastest cruise speed?", options:["Forward CG","Aft CG","Mid CG","CG position does not affect cruise speed"], answer:1, exp:"Aft CG = faster cruise speed, less stability, more range/endurance. Forward CG = slower cruise, more stable."},
+  {topic:"031 – Mass & Balance", q:"DOM (Dry Operating Mass) = :", options:["Airplane + usable fuel + traffic load","Airplane + unusable fuel + engine oil + coolant","Airplane minus usable fuel and traffic load","Empty airframe only"], answer:2, exp:"DOM = airplane − usable fuel − traffic load. BEM = airplane + unusable fuel + engine oil + coolant."},
+  {topic:"031 – Mass & Balance", q:"What is the weight of Jet A1 fuel?", options:["5.85 lb/US gal","6.71 lb/US gal","7.14 lb/US gal","8.02 lb/US gal"], answer:1, exp:"Jet A1 = 6.71 lb/US gallon. Specific gravity approximately 0.804 kg/L."},
+  {topic:"031 – Mass & Balance", q:"EU-OPS standard adult male passenger weight (30 or more seats, all adult)?", options:["76 kg","84 kg","88 kg","90 kg"], answer:1, exp:"30 or more seats: all adult = 84 kg. 20 or more seats: Male = 88 kg, Female = 70 kg. Children = 35 kg."},
+  {topic:"031 – Mass & Balance", q:"MAC (Mean Aerodynamic Chord) percentage 0% is at:", options:["Trailing edge","Midpoint of chord","Leading edge","Root chord"], answer:2, exp:"0% MAC = leading edge; 100% MAC = trailing edge. CG is typically expressed as % MAC."},
+  {topic:"031 – Mass & Balance", q:"A tail-heavy airplane compared to a nose-heavy airplane:", options:["Is more stable and stalls at a higher speed","Is less stable and stalls at a lower speed","Is more stable and stalls at a lower speed","Is less stable and stalls at a higher speed"], answer:1, exp:"A tail-heavy (aft CG) airplane is LESS stable and stalls at a LOWER speed than a nose-heavy airplane."},
+
+  // ===== 032 PERFORMANCE =====
+  {topic:"032 – Performance", q:"V1 minimum must always be greater than:", options:["VMCA","VR","VMCG","V2"], answer:2, exp:"V1 must be >VMCG, <VMBE, ≤VR. VMCG is the minimum control speed on the ground."},
+  {topic:"032 – Performance", q:"V2 minimum requirements are:", options:["≥1.1VS and ≥1.05VMCA","≥1.2VS and ≥1.1VMCA","≥1.1VS and ≥1.1VMCA","≥1.3VS and ≥1.2VMCA"], answer:1, exp:"V2 minimum = 1.2 VS and 1.1 VMCA. Achieved at screen height 35 ft with one engine inoperative."},
+  {topic:"032 – Performance", q:"VX is best angle of climb speed, which means:", options:["Greatest altitude in shortest time","Greatest altitude in shortest horizontal distance","Best fuel efficiency in climb","Maximum endurance in climb"], answer:1, exp:"VX = best angle = greatest altitude over shortest horizontal distance. VY = best rate = greatest altitude in shortest time."},
+  {topic:"032 – Performance", q:"TODA (Takeoff Distance Available) equals:", options:["TORA only","TORA + stopway","TORA + clearway","ASDA + clearway"], answer:2, exp:"TODA = TORA + clearway. ASDA = TORA + stopway. TORA = runway length."},
+  {topic:"032 – Performance", q:"Climbing at a constant IAS, Mach number:", options:["Decreases","Stays constant","Increases","First increases then decreases"], answer:2, exp:"Climbing at constant IAS, Mach number increases because the local speed of sound decreases with lower temperatures at altitude."},
+  {topic:"032 – Performance", q:"Descending at a constant Mach number, IAS will:", options:["Decrease","Stay constant","Increase","Oscillate"], answer:2, exp:"Descending at constant Mach number: IAS and TAS both increase (temperature increases, LSS increases)."},
+  {topic:"032 – Performance", q:"The balanced field condition means:", options:["TORA = TODA","TODA = ASDA","ASDA = LDA","TORA = ASDA"], answer:1, exp:"Balanced field: TODA = ASDA for the given aircraft weight, engine thrust, configuration and runway condition."},
+  {topic:"032 – Performance", q:"Glide angle is affected by:", options:["Aircraft weight — heavier aircraft glide farther","Aircraft weight — heavier aircraft glide shorter","Glide angle is not affected by aircraft weight","Only headwind affects glide angle"], answer:2, exp:"Glide angle and gliding range are NOT affected by aircraft weight/mass (though heavier aircraft have higher sink rate)."},
+  {topic:"032 – Performance", q:"Specific Range (SR) is defined as:", options:["Distance per unit fuel = TAS / total fuel flow","Fuel flow per unit thrust","Range per unit weight","Endurance per unit fuel"], answer:0, exp:"Specific Range (SR) = TAS ÷ total fuel flow. Represents distance achievable per unit of fuel."},
+  {topic:"032 – Performance", q:"The RWY condition braking coefficient for a DRY runway (turbo-jet) is:", options:["0.40","0.52","0.60","0.72"], answer:2, exp:"Dry runway: 0.60 (60%). Wet runway: 0.52 (52%)."},
+  {topic:"032 – Performance", q:"In the takeoff second segment, the required climb gradient for a twin-engine aircraft is:", options:["Positive only","2.4%","1.2%","3.0%"], answer:1, exp:"Second segment (gear fully retracted, speed V2): Twin = 2.4%, Quad = 3.0%."},
+  {topic:"032 – Performance", q:"The standard missed approach climb gradient is:", options:["2.1%","2.5%","3.0%","3.3%"], answer:1, exp:"Standard missed approach climb gradient = 2.5%. Approach climb (1 engine out, twin) = 2.1%. Standard SID = 3.3%."},
+  {topic:"032 – Performance", q:"Mach number is used as speed reference above approximately:", options:["18,000 ft","20,000 ft","26,000 ft","35,000 ft"], answer:2, exp:"Above ~26,000 ft, Mach number becomes the aircraft's limiting speed reference. Below this, constant IAS climb with increasing Mach."},
+  {topic:"032 – Performance", q:"Net climb gradient deduction for a twin-engine aircraft compared to gross is:", options:["0.5%","0.8%","0.9%","1.0%"], answer:1, exp:"Net = Gross minus: 0.8% for twin, 0.9% for 3-engine, 1.0% for 4-engine aircraft."},
+  {topic:"032 – Performance", q:"Using flaps at takeoff:", options:["Increases V2 and VLOF","Reduces takeoff distance but also reduces rate and angle of climb","Increases both takeoff distance and climb performance","Has no effect on V2"], answer:1, exp:"Flaps reduce takeoff distance but also reduce rate and angle of climb. Flaps down = V2 decreases."},
+
+  // ===== 033 FLIGHT PLANNING =====
+  {topic:"033 – Flight Planning", q:"Final reserve fuel for a jet aircraft is:", options:["15 min at 1500 ft","20 min at 1500 ft","30 min at 1500 ft","45 min at 1500 ft"], answer:2, exp:"Final reserve: 30 min for jet/turboprop, 45 min for piston engine aircraft — holding at 1500 ft above aerodrome in standard conditions."},
+  {topic:"033 – Flight Planning", q:"Standard contingency fuel is:", options:["3% of trip fuel","5% of trip fuel","10% of trip fuel","5% of block fuel"], answer:1, exp:"Contingency fuel = 5% of planned trip fuel (or 3% if an en-route alternate is available), but at least enough for 5 min holding."},
+  {topic:"033 – Flight Planning", q:"A fuel emergency is declared by broadcasting:", options:["PAN PAN PAN FUEL","MAYDAY MAYDAY MAYDAY FUEL","URGENCY FUEL LOW","EMERGENCY FUEL"], answer:1, exp:"Fuel emergency: broadcast MAYDAY MAYDAY MAYDAY FUEL when usable fuel on landing will be less than final reserve fuel."},
+  {topic:"033 – Flight Planning", q:"Performance Class A includes:", options:["Propeller driven ≤5700 kg","Multi-engine JET and Turboprops >5700 kg or >9 seats","Reciprocating engines >5700 kg","Single engine turboprops"], answer:1, exp:"Class A = multi-engine JET and Turboprops (>5700 kg or >9 seats). Class B = propeller ≤5700 kg and ≤9 seats."},
+  {topic:"033 – Flight Planning", q:"RVSM airspace applies between:", options:["FL245 and FL410","FL290 and FL410","FL195 and FL390","FL310 and FL450"], answer:1, exp:"RVSM (Reduced Vertical Separation Minima) airspace: FL290 to FL410."},
+  {topic:"033 – Flight Planning", q:"Below FL290, IFR cruising levels for tracks 000°–179° are:", options:["Odd flight levels","Even flight levels","Any flight level","ATC assigned only"], answer:1, exp:"Below FL290: 000°–179° = EVEN flight levels; 180°–359° = ODD flight levels. (Semi-circular rule)"},
+  {topic:"033 – Flight Planning", q:"ETOPS is defined as a route where no suitable airport is within:", options:["30 minutes flying time at single-engine speed","60 minutes flying time at approved one-engine-out cruise speed","90 minutes flying time at normal cruise","120 minutes flying time"], answer:1, exp:"ETOPS flight = route where no suitable airport is within 60 minutes flying time in still air at approved OEI cruise speed."},
+  {topic:"033 – Flight Planning", q:"A take-off alternate for a twin-engine aircraft must be within:", options:["30 min at single-engine cruise speed","1 hour at single-engine cruise speed (Wizz Air = 250 NM)","2 hours at OEI cruise speed","No distance limit"], answer:1, exp:"Take-off alternate: within 1 hour at single-engine cruise speed for twin-engine aircraft. Wizz Air = 250 NM."},
+  {topic:"033 – Flight Planning", q:"For MNPS airspace, lateral separation between approved aircraft is:", options:["30 NM","60 NM","90 NM","120 NM"], answer:1, exp:"MNPS lateral separation = 60 NM. Longitudinal: 15 min crossing tracks; 10 min same/diverging tracks."},
+  {topic:"033 – Flight Planning", q:"When planning to an isolated aerodrome (no alternate), additional fuel is not less than:", options:["30 min holding","1 hour cruise","2 hours normal cruise after overhead destination","3 hours total"], answer:2, exp:"Isolated aerodrome: additional fuel to fly 2 hours with normal cruise consumption after arriving overhead destination (including final reserve)."},
+  {topic:"033 – Flight Planning", q:"IFR flight rules code for a flight plan starting IFR then changing to VFR:", options:["I","V","Y","Z"], answer:2, exp:"Y = IFR changing to VFR. Z = VFR changing to IFR. I = IFR throughout. V = VFR throughout."},
+  {topic:"033 – Flight Planning", q:"Rate 1 turn equals:", options:["1.5°/sec (90°/min)","3°/sec (180°/min)","6°/sec (360°/min)","9°/sec (540°/min)"], answer:1, exp:"Rate 1 = 3°/sec = 180°/min. Rate 2 = 6°/sec = 360°/min. Rate 3 = 9°/sec = 540°/min."},
+
+  // ===== 040 HUMAN PERFORMANCE =====
+  {topic:"040 – Human Performance", q:"Atmosphere composition (approximate):", options:["78% O2, 21% N2, 1% other","21% N2, 78% O2, 1% other","78% N2, 21% O2, 1% other","50% N2, 49% O2, 1% other"], answer:2, exp:"Atmosphere: 78% nitrogen, 21% oxygen, 1% other gases."},
+  {topic:"040 – Human Performance", q:"Hyperventilation causes blood to become:", options:["More acidic","More alkaline","Lower in O2 content directly","No change in blood chemistry"], answer:1, exp:"Hyperventilation → excess CO2 exhaled → blood becomes more alkaline → arterial diameter reduces → reduced O2 to brain."},
+  {topic:"040 – Human Performance", q:"Time of useful consciousness at 40,000 ft is approximately:", options:["45–75 seconds","20 seconds","12 seconds","2–3 minutes"], answer:1, exp:"TUC: 18,000 ft = 30 min; 25,000 ft = 2–3 min; 30,000 ft = 45–75 sec; 40,000 ft = 20 sec; 45,000 ft = 12 sec."},
+  {topic:"040 – Human Performance", q:"Cyanosis is:", options:["A symptom of hyperventilation","Blue/purple skin coloration due to low oxygen saturation","A symptom of hypercapnia only","Redness due to excess O2"], answer:1, exp:"Cyanosis = blue/purple coloration near skin surface due to low O2 saturation. Exists only in hypoxia."},
+  {topic:"040 – Human Performance", q:"Which is NOT a symptom of hypoxia?", options:["Confusion","Euphoria","Pain in the joints","Cyanosis"], answer:2, exp:"Pain in the joints is NOT a symptom of hypoxia — it is associated with decompression sickness."},
+  {topic:"040 – Human Performance", q:"Time of useful consciousness at 30,000 ft:", options:["12 seconds","20 seconds","45–75 seconds","2–3 minutes"], answer:2, exp:"At 30,000 ft: 45–75 seconds. At 25,000 ft: 2–3 min. At 40,000 ft: 20 sec."},
+  {topic:"040 – Human Performance", q:"Which trans-oceanic flight direction is generally easier to cope with regarding fatigue?", options:["Eastbound","Westbound","Both are equal","Direction has no relevance"], answer:1, exp:"Westbound trans-oceanic flights are easier to cope with than eastbound 'red-eye' flights — aligns with natural circadian rhythm."},
+  {topic:"040 – Human Performance", q:"When approaching a runway with a narrow/long appearance, the pilot's perception and typical reaction is:", options:["Perceive being too low, pull up, land long","Perceive being too high, push, land short/hard","Perceive correct glidepath, no correction","Perceive runway is wet, reduce speed"], answer:1, exp:"Narrow/long runway: perception = being too HIGH → push → result: land short or land hard."},
+  {topic:"040 – Human Performance", q:"A wide or short runway creates the illusion of being:", options:["Too high on approach","Too fast on approach","Too low on approach","On correct glidepath"], answer:2, exp:"Wide or short runway: pilot perceives being too LOW → pulls up → lands long or overruns."},
+  {topic:"040 – Human Performance", q:"A runway with uphill terrain slope creates the illusion of being:", options:["Too low","Too high","On correct slope","Upwind"], answer:1, exp:"Uphill sloping runway: perception = being too HIGH → pilot pushes → lands short/hard. Downhill slope = too low → overrun."},
+
+  // ===== 050 METEOROLOGY =====
+  {topic:"050 – Meteorology", q:"ISA sea-level temperature and pressure are:", options:["15°C and 1013.25 hPa","0°C and 1013.25 hPa","15°C and 1029.92 hPa","20°C and 1013.25 hPa"], answer:0, exp:"ISA: 1013.25 hPa, 15°C at sea level, density 1.225 kg/m³, temp gradient 1.98°C/1000 ft, tropopause at 11,000 m (−56.5°C)."},
+  {topic:"050 – Meteorology", q:"CAVOK requires visibility greater than:", options:["5 km","8 km","10 km","15 km"], answer:2, exp:"CAVOK: visibility >10 km, no clouds below 5000 ft (or lowest sector altitude), no CB within 15 km, no significant weather."},
+  {topic:"050 – Meteorology", q:"QNH higher than standard means the true altitude is:", options:["Lower than indicated altitude","Higher than indicated altitude","Equal to indicated altitude","Not determinable"], answer:1, exp:"QNH↑ = true altitude HIGHER than indicated. QNH↓ = true altitude LOWER than indicated."},
+  {topic:"050 – Meteorology", q:"The altimeter error per 1°C deviation from ISA per 1000 ft is:", options:["2 ft","4 ft","6 ft","8 ft"], answer:1, exp:"Altimeter error = 4 ft per 1°C deviation from ISA per 1000 ft altitude. MEMO: 'Going from HIGH to LOW, look below!'"},
+  {topic:"050 – Meteorology", q:"Dry Adiabatic Lapse Rate (DALR) is:", options:["1.5°C/1000 ft","2.0°C/1000 ft","3.0°C/1000 ft","1.98°C/1000 ft"], answer:2, exp:"DALR (unsaturated air) = 3.0°C/1000 ft. SALR (saturated) = 1.5°C/1000 ft. ISA lapse rate = 1.98°C/1000 ft."},
+  {topic:"050 – Meteorology", q:"Cloud base formula:", options:["(TEMP − DEW POINT) / 2 × 1000 ft","(TEMP − DEW POINT) / 3 × 1000 ft","(TEMP − DEW POINT) / 4 × 1000 ft","(TEMP + DEW POINT) / 3 × 1000 ft"], answer:1, exp:"Cloud base (ft) = (Temp − Dew Point) ÷ 3 × 1000."},
+  {topic:"050 – Meteorology", q:"Minimum wind speed to classify as a Jet Stream is:", options:["30 knots","45 knots","60 knots","80 knots"], answer:2, exp:"Jet Stream minimum speed = 60 knots. CAT is associated with jet streams, strongest on the cold air side below the jet axis."},
+  {topic:"050 – Meteorology", q:"Radiation fog is characterized by:", options:["Forming over warm ocean currents","Always moving with the wind","Forming at night under clear skies with calm winds, always at ground level","Forming on mountain slopes from moist air"], answer:2, exp:"Radiation fog: forms at night under clear skies with calm winds. Depth 3–1000 ft, always at ground level, usually stationary."},
+  {topic:"050 – Meteorology", q:"Low pressure system in Northern Hemisphere — wind circulates:", options:["Clockwise","Counterclockwise","Outward radially","Inward radially"], answer:1, exp:"Low pressure (N hemisphere): counterclockwise. High pressure (N hemisphere): clockwise. Air RISES in low pressure."},
+  {topic:"050 – Meteorology", q:"SIGMET validity is not more than:", options:["2 hours","4 hours (6 hours for TC/VA)","6 hours","12 hours"], answer:1, exp:"SIGMET validity ≤ 4 hours (≤ 6 hours for Tropical Cyclone and Volcanic Ash). Cancelled when phenomena no longer occurring."},
+  {topic:"050 – Meteorology", q:"Microburst horizontal outflow can extend to approximately:", options:["1 NM","2 NM","4 NM","10 NM"], answer:2, exp:"Microburst: downdraft < 1 NM diameter; horizontal outflow ~4 NM. Downdraft up to 8000 ft/min; winds up to 100 kt. Lasts 1–5 min."},
+  {topic:"050 – Meteorology", q:"Rime ice is formed from:", options:["Large supercooled droplets freezing slowly","Small supercooled droplets freezing rapidly — white, brittle","Supercooled large droplets with slow progressive freezing","Freezing rain forming clear transparent sheet"], answer:1, exp:"Rime ice: small supercooled droplets freeze rapidly → rough, crystalline, opaque, brittle, white. Clear ice: large droplets, slower freeze → transparent."},
+  {topic:"050 – Meteorology", q:"TAF valid for 12 to 30 hours should be issued every:", options:["1 hour","3 hours","6 hours","12 hours"], answer:2, exp:"TAF validity 12–30 hours: issued every 6 hours. TAF <12 hours: issued every 3 hours."},
+  {topic:"050 – Meteorology", q:"QFE is defined as:", options:["Altimeter pressure setting giving altitude above sea level","Station pressure adjusted for field elevation — altimeter reads zero on the ground","Standard pressure 1013.25 hPa","Pressure adjusted for density altitude"], answer:1, exp:"QFE = station pressure adjusted for field elevation. Set on altimeter → reads zero on the airfield. QNH → reads altitude AMSL. QNE → flight level (1013)."},
+  {topic:"050 – Meteorology", q:"METAR TREND codes include:", options:["NOTAM, TEMPO, SIGMET","NOSIG, TEMPO, BECMG","SIGMET, AIRMET, PIREP","TAF, METAR, SPECI"], answer:1, exp:"TREND forecast in METAR: NOSIG (no significant change), TEMPO (temporary), BECMG (becoming). Valid 2 hours from observation."},
+  {topic:"050 – Meteorology", q:"Clear Air Turbulence (CAT) is strongest:", options:["On the warm air side of the jet stream","Above the jet stream axis","On the cold air side, next to and just below the jet axis","At the jet stream core itself"], answer:2, exp:"CAT is strongest on the COLD air side of the jet, next to and just underneath the axis of the jet stream."},
+  {topic:"050 – Meteorology", q:"Katabatic wind:", options:["Flows up the side of a hill","Flows down the side of a hill","Blows parallel to isobars","Blows from sea to land during daytime"], answer:1, exp:"Katabatic = flows DOWN the hill. Anabatic = flows UP the hill. Land/sea breeze: sea-to-land by day, land-to-sea by night."},
+  {topic:"050 – Meteorology", q:"1 hPa in altitude equals approximately:", options:["13 ft","20 ft","27 ft","35 ft"], answer:2, exp:"1 hPa = 27.29 ft = 8.32 m (approximately)."},
+  {topic:"050 – Meteorology", q:"In a METAR, 'R04/1500N' means:", options:["Runway 04, RVR 1500 m and not changing significantly","Runway 04, visibility 1.5 km normal","Runway 04, 1500 m RVR rising","Runway 04, north wind 15 kts"], answer:0, exp:"R04/1500N = RVR runway 04 is 1500 m and Not changing significantly. U = rising, D = decreasing, P2000 = more than 2000 m."},
+
+  // ===== 061 GENERAL NAVIGATION =====
+  {topic:"061 – General Navigation", q:"Mnemonic for converting compass to true: CDMVT means:", options:["Can Dead Men Vote Twice — add east, subtract west","Compass Deviation Magnetic Variation True — subtract all","Compass, Drift, Mach, Variation, True — always add","Can Dead Men Vote Thrice — subtract east"], answer:0, exp:"'Can Dead Men Vote Twice?' C→D→M→V→T. Deviation east = compass least. Variation east = magnetic least. (+) = east."},
+  {topic:"061 – General Navigation", q:"VOR's variation is applied at:", options:["Aircraft position","Station (beacon) position","Midpoint between aircraft and station","Not applied to VOR"], answer:1, exp:"VOR's variation is applied at the STATION position. NDB's variation is applied at the AIRCRAFT position."},
+  {topic:"061 – General Navigation", q:"QDM is:", options:["True bearing FROM the station","Magnetic bearing FROM the station","Magnetic bearing TO the station","True bearing TO the station"], answer:2, exp:"QDM = Magnetic bearing TO the station. QDR = Magnetic bearing FROM. QUJ = True bearing TO. QTE = True bearing FROM."},
+  {topic:"061 – General Navigation", q:"1° of latitude (N/S) equals how many nautical miles?", options:["30 NM","45 NM","60 NM","90 NM"], answer:2, exp:"1° latitude (N/S) = 60 NM. 1° longitude (E/W) = 30 NM (at 60°N/S latitude)."},
+  {topic:"061 – General Navigation", q:"Local Speed of Sound at ISA sea level is approximately:", options:["540 kt","600 kt","662 kt","720 kt"], answer:2, exp:"LSS at ISA sea level = 662 kt. LSS = 661 × √(T(kelvin)/288) = 39 × √T(kelvin). T↑ = LSS↑."},
+  {topic:"061 – General Navigation", q:"The sun travels approximately:", options:["10°/hour","12°/hour","15°/hour = 1°/4 min","18°/hour"], answer:2, exp:"Sun travels 15°/hour = 1° per 4 minutes. Earth is farthest from sun (aphelion) in early July; closest (perihelion) in early January."},
+  {topic:"061 – General Navigation", q:"An agonic line connects positions with:", options:["Same grivation","Zero magnetic variation","Same elevation","Zero magnetic deviation"], answer:1, exp:"Agonic line = zero degrees magnetic variation. Isogonic lines = same variation. Isogrives = same grivation."},
+  {topic:"061 – General Navigation", q:"A Great Circle is:", options:["A line crossing all meridians at the same angle","The shortest distance between two points on a sphere (constantly changing track)","A line of constant magnetic heading","A circle of equal altitude above the horizon"], answer:1, exp:"Great Circle = shortest distance between two points on a sphere, with constantly changing track direction due to convergence."},
+  {topic:"061 – General Navigation", q:"A Rhumb Line (loxodrome) is:", options:["Shortest distance on a sphere","Arc crossing all meridians at the same angle (constant track)","Always shorter than a great circle","A line of equal barometric pressure"], answer:1, exp:"Rhumb line = loxodrome = arc crossing all meridians at the same angle = constant magnetic track. Longer than great circle except on equator/meridians."},
+  {topic:"061 – General Navigation", q:"Direct Mercator chart is:", options:["A cylindrical projection based on a meridian","A cylindrical projection based on the Equator","A conical projection","A polar stereographic projection"], answer:1, exp:"Direct Mercator = cylindrical projection based on the Equator. Transverse Mercator = based on a meridian. Oblique = any other great circle."},
+
+  // ===== 062 RADIO NAVIGATION =====
+  {topic:"062 – Radio Navigation", q:"VHF aviation communication frequencies range from:", options:["108–118 MHz","108–137 MHz","118–137 MHz","30–300 MHz"], answer:1, exp:"Aviation VHF frequencies 108.00 MHz to 137.00 MHz. Comm uses 118–137 MHz; nav/ILS uses 108–117.95 MHz."},
+  {topic:"062 – Radio Navigation", q:"DME operates in which frequency band?", options:["VHF (30–300 MHz)","UHF (962–1213 MHz) = 252 channels","SHF (3–30 GHz)","LF (30–300 kHz)"], answer:1, exp:"DME: UHF 962–1213 MHz = 252 channels. Beacon saturation occurs when simultaneous interrogations exceed 100."},
+  {topic:"062 – Radio Navigation", q:"GPS constellation consists of:", options:["18 satellites","21 operational + 3 standby = 24 total","32 satellites total","12 operational satellites"], answer:1, exp:"GPS: 24 satellites (21 operational + 3 standby) at 20,200 km altitude. Minimum 5 satellites visible at ≥7.5° above horizon."},
+  {topic:"062 – Radio Navigation", q:"ILS localizer frequency range:", options:["108–111.975 MHz (VHF)","329.15–335 MHz (UHF)","75 MHz","962–1213 MHz"], answer:0, exp:"ILS localizer: 108–111.975 MHz (VHF). Glide path: UHF. Markers: VHF 75 MHz. 150 Hz signal = right and below."},
+  {topic:"062 – Radio Navigation", q:"NDB frequency range:", options:["108–117.95 MHz","190–1750 kHz (LF & MF)","960–1215 MHz","108–111.975 MHz"], answer:1, exp:"NDB: 190–1750 kHz (LF & MF). Accuracy ±5° (day only). Range: 3×√P(W) over water; 2×√P(W) over land."},
+  {topic:"062 – Radio Navigation", q:"VOR principle of operation is:", options:["Pulse timing (DME-like)","Phase comparison of two 30 Hz signals","Doppler frequency shift","AM modulation of carrier frequency"], answer:1, exp:"VOR: phase comparison of two 30 Hz signals (variable and reference phase). 160 channels, 108–117.95 MHz, range = line of sight."},
+  {topic:"062 – Radio Navigation", q:"MLS (Microwave Landing System) frequency:", options:["108–111.975 MHz","329–335 MHz","5.03–5.09 GHz (SHF, 200 channels)","960–1215 MHz"], answer:2, exp:"MLS: 5.03–5.09 GHz (SHF) = 200 channels. All-weather precision landing system with wide capture angles."},
+  {topic:"062 – Radio Navigation", q:"HF is used for:", options:["Short-range VHF comms","Long-range communication (2.85–22 MHz aviation frequencies)","ILS approaches","GPS navigation"], answer:1, exp:"HF (3–30 MHz) = long-range communication. Aviation HF: 2.85–22 MHz. VHF = short-range comms."},
+  {topic:"062 – Radio Navigation", q:"For an RMI using an NDB, variation is applied at:", options:["Beacon position","Aircraft position","Not applied","Midpoint of track"], answer:1, exp:"To convert RMI bearings to true: NDB = apply variation at AIRCRAFT position. VOR = apply variation at BEACON position."},
+  {topic:"062 – Radio Navigation", q:"Inertial Navigation System (INS) uses:", options:["External radio references only","GPS and barometric input","Accelerometers and gyroscopes (dead reckoning, no external references)","VOR/DME triangulation"], answer:2, exp:"INS uses accelerometers (motion) and gyroscopes (rotation) for continuous dead-reckoning navigation — no external references needed."},
+
+  // ===== 070 OPERATIONAL PROCEDURES =====
+  {topic:"070 – Operational Procedures", q:"CAT I ILS minima are:", options:["RVR 200 m, DH 50 ft","RVR 300 m, DH 100 ft","RVR 550 m, DH 200 ft","RVR 1000 m, DH 300 ft"], answer:2, exp:"CAT I: RVR 550 m, DH 200 ft. CAT II: RVR 300 m, DH 100 ft. CAT IIIA: RVR 200 m, DH 50–100 ft. CAT IIIB: RVR 75 m, DH <50 ft."},
+  {topic:"070 – Operational Procedures", q:"Low Visibility Take-off (LVTO) is defined as takeoff where RVR is less than:", options:["200 m","400 m","550 m","800 m"], answer:1, exp:"LVTO = RVR less than 400 m. Low Visibility Conditions for landing: RVR <1000 m or cloud base <300 ft."},
+  {topic:"070 – Operational Procedures", q:"Category C aircraft (A320) circle-to-land minima are:", options:["1500 m visibility, 400 ft MDA","1600 m visibility, 500 ft MDA","2400 m visibility, 600 ft MDA","3600 m visibility, 700 ft MDA"], answer:2, exp:"Cat C (A320, 121–140 kt): 2400 m visibility, 600 ft MDA. V_at = 1.3 × Vs."},
+  {topic:"070 – Operational Procedures", q:"A runway is considered CONTAMINATED when more than what percentage is covered?", options:["10%","15%","25%","50%"], answer:2, exp:"Contaminated runway: >25% of runway area covered by surface water >3mm, slush, compacted snow, or ice."},
+  {topic:"070 – Operational Procedures", q:"Maximum SNOWTAM validity is:", options:["8 hours","12 hours","24 hours","48 hours"], answer:2, exp:"Maximum SNOWTAM validity is 24 hours."},
+  {topic:"070 – Operational Procedures", q:"Pre-flight alcohol rules — no alcohol less than how many hours before reporting:", options:["4 hours","6 hours","8 hours","12 hours"], answer:2, exp:"EU-OPS: no alcohol <8 hours before reporting time. Blood alcohol ≤0.2 promille at start of duty. No alcohol during duty/standby."},
+  {topic:"070 – Operational Procedures", q:"Required Landing Distance (dry) = ALD dry × :", options:["1.15","1.35","1.64","1.92"], answer:2, exp:"RLD (dry) = ALD dry × 1.64. RLD (wet) = RLD dry × 1.15. Jets land in 60% LDA; turboprops in 70% LDA."},
+  {topic:"070 – Operational Procedures", q:"On a 3° glideslope, Required Rate of Descent = :", options:["Ground Speed × 5","Ground Speed / 2 × 10","Ground Speed × 10","Ground Speed / 5"], answer:1, exp:"3° glideslope: ROD = (Ground Speed ÷ 2) × 10. E.g., 140 kt GS = 700 fpm. Also: 3° = 5.2% = 319 ft/NM."},
+  {topic:"070 – Operational Procedures", q:"Recency requirement is how many take-offs and landings in the last 90 days?", options:["1","2","3","5"], answer:2, exp:"Recency = 3 take-offs and landings in the last 90 days. Flight preparation documents must be kept for 3 months."},
+  {topic:"070 – Operational Procedures", q:"ELT (Emergency Locator Transmitter) battery must last:", options:["12 hours","24 hours","48 hours","72 hours"], answer:2, exp:"ELT/SARB battery must last 48 hours."},
+  {topic:"070 – Operational Procedures", q:"For 61–200 passengers, the minimum number of hand fire extinguishers is:", options:["1","2","3","4"], answer:2, exp:"61–200 pax: minimum 3 hand fire extinguishers + crash axe/crow-bar on flight deck. 100+ pax: 2 megaphones."},
+  {topic:"070 – Operational Procedures", q:"Miles to descent rule of thumb (for planning top of descent):", options:["ΔFL ÷ 2 = NM","ΔFL ÷ 3 = NM","ΔFL × 3 = NM","ΔFL ÷ 4 = NM"], answer:1, exp:"Miles to descent: ΔFlight Level ÷ 3 = NM needed. E.g., from FL360 to sea level = 360 ÷ 3 = 120 NM."},
+  {topic:"070 – Operational Procedures", q:"Operations Manual Part B covers:", options:["General/basic: quality system, crew composition, FTL","Aeroplane operating matters: limitations, procedures, performance, MEL","Route and aerodrome instructions","Training"],answer:1, exp:"Part A = General/basic. Part B = Aeroplane operating matters (limitations, procedures, performance, M&B, MEL, CDL, systems). Part C = Route/aerodrome. Part D = Training."},
+  {topic:"070 – Operational Procedures", q:"Non-precision NDB approach minimum is:", options:["200 ft","250 ft","300 ft","350 ft"], answer:3, exp:"NDB = 350 ft. NDB/DME = 300 ft. VOR = 300 ft. VOR/DME = 250 ft. ILS LOC (GS U/S) = 250 ft. RNAV/LNAV = 300 ft."},
+  {topic:"070 – Operational Procedures", q:"VIS to RVR conversion for high intensity lighting at night:", options:["RVR = met VIS × 1.0","RVR = met VIS × 1.5","RVR = met VIS × 2.0","RVR = met VIS × 2.5"], answer:2, exp:"High intensity approach + runway lighting: daytime RVR = VIS × 1.5; night RVR = VIS × 2.0. Only valid when VIS >800 m."},
+  {topic:"070 – Operational Procedures", q:"Minimum runway lighting for takeoff RVR 200 m (CAT A/B/C):", options:["No lighting required","Edge lights OR centerline only","Edge lights AND centerline","Edge lights AND centerline AND multiple RVR reports"], answer:2, exp:"200 m: edge lights AND centerline lights. For 150 m: edge + centerline + multiple RVR. Day only with no lights: 500 m."},
+  {topic:"070 – Operational Procedures", q:"A life jacket is mandatory for passengers on aircraft flying more than how far from shore?", options:["25 NM","50 NM","100 NM","200 NM"], answer:1, exp:"Life jacket mandatory for any passenger on aircraft flying more than 50 NM from shore."},
+
+  // ===== 080 PRINCIPLES OF FLIGHT =====
+  {topic:"080 – Principles of Flight", q:"Induced drag is highest at:", options:["High speeds","Low speeds (high AOA)","Cruise speed","Mach number > 0.8"], answer:1, exp:"Induced drag (lift-dependent drag) is highest at LOW speeds (high AOA). Parasite drag is highest at high speeds."},
+  {topic:"080 – Principles of Flight", q:"Center of Pressure (CP) location is approximately:", options:["50% of chord","75% of chord","At the leading edge","Within the forward 25% of chord"], answer:3, exp:"CP is generally located within the forward half of the chord (~25%). CP moves FORWARD as AOA approaches stall."},
+  {topic:"080 – Principles of Flight", q:"Dutch roll is described as:", options:["Pure roll oscillation","Pure yaw oscillation","Battle between lateral and directional stability — combined yaw and roll","Longitudinal pitch phugoid oscillation"], answer:2, exp:"Dutch roll = battle between lateral stability (dihedral effect) and directional stability (fin effect). Recovery: opposite aileron (yaw dampers U/S)."},
+  {topic:"080 – Principles of Flight", q:"The coffin corner is where:", options:["Stall speed equals critical Mach number","Absolute ceiling equals service ceiling","VX equals VY","MMO equals VMO"], answer:0, exp:"Coffin corner = altitude where stall speed equals critical Mach number — any speed change causes loss of altitude."},
+  {topic:"080 – Principles of Flight", q:"Critical Mach number (Mcr) is:", options:["Mach 1.0 at wing surface","Aircraft Mach speed at which airflow over the WING becomes sonic","Maximum operating Mach number","Mach number at which shock stall occurs"], answer:1, exp:"Critical Mach = aircraft speed at which local airflow in some areas near the airframe reaches speed of sound, forming weak shock wave."},
+  {topic:"080 – Principles of Flight", q:"Longitudinal static stability is created by:", options:["Wing dihedral","CG located IN FRONT of the neutral point","Large vertical tail","Swept wings"], answer:1, exp:"Longitudinal static stability requires CG in front of the neutral point. Two factors: horizontal stabilizer size/position and CG position."},
+  {topic:"080 – Principles of Flight", q:"Lateral stability is achieved through:", options:["Fin and rudder","Dihedral, sweepback, keel effect and weight distribution","Horizontal stabilizer position","Vortex generators"], answer:1, exp:"Lateral stability: wing dihedral, sweepback, keel effect, and proper weight distribution. NOT through fin/rudder (those are directional)."},
+  {topic:"080 – Principles of Flight", q:"Stall speed in a 60° banked turn increases by factor:", options:["1.20","1.32","1.41","1.73"], answer:2, exp:"Stall speed in 60° banked turn increases by factor 1.41 (√2). Load factor in 60° bank = 2g."},
+  {topic:"080 – Principles of Flight", q:"Superstall is:", options:["Any stall above 40,000 ft","A stable stall with nearly constant pitch — aircraft cannot recover","Stall at speeds above Mach 0.5","Stall caused by icing"], answer:1, exp:"Superstall = stable stall with almost constant pitch attitude from which the aircraft is unable to recover on its own."},
+  {topic:"080 – Principles of Flight", q:"Swept wings have the primary purpose of:", options:["Reducing induced drag","Increasing lift coefficient","Increasing the value of critical Mach number","Improving low-speed handling"], answer:2, exp:"Primary purpose of sweptback wing = increase critical Mach number. Advantage: less drag at high speed; disadvantage: higher stall speed."},
+  {topic:"080 – Principles of Flight", q:"Aspect ratio = :", options:["Wing area ÷ span","Span² ÷ wing area","Chord ÷ span","Span ÷ chord"], answer:1, exp:"Aspect ratio = wingspan² ÷ wing area. High AR = more lift (gliders). Low AR = less lift but capable of higher speeds."},
+  {topic:"080 – Principles of Flight", q:"Vortex Generators are designed to:", options:["Create drag for deceleration","Transfer energy from free airflow INTO the boundary layer","Generate lift at high AOA","Reduce wave drag at high Mach numbers"], answer:1, exp:"Vortex generators transfer energy from free airflow into the boundary layer, delaying separation and reducing stall speed."},
+  {topic:"080 – Principles of Flight", q:"Service ceiling is where rate of climb drops below:", options:["500 fpm","200 fpm","100 fpm","0 fpm"], answer:2, exp:"Service ceiling = rate of climb drops below 100 fpm. Absolute ceiling = rate of climb drops to zero (coffin corner)."},
+  {topic:"080 – Principles of Flight", q:"Winglets reduce:", options:["Profile drag","Induced drag caused by wingtip vortices, improving L/D ratio","Compressibility drag","Wave drag at high Mach numbers"], answer:1, exp:"Winglets reduce induced drag from wingtip vortices → improved lift-to-drag ratio → better fuel efficiency and higher optimum FL."},
+  {topic:"080 – Principles of Flight", q:"Fowler flaps (trailing edge) primarily:", options:["Increase lift at lower angles of deflection","Only increase drag","Reduce maximum lift coefficient","Are used as spoilers"], answer:0, exp:"Fowler flaps (trailing edge): increase lift at lower deflection angles. Leading edge flaps/slats: increase lift by extending chord line, camber and area."},
+  {topic:"080 – Principles of Flight", q:"For a jet aircraft, best rate of climb is achieved when:", options:["Excess THRUST available is at maximum","Excess POWER available is at maximum","L/D is maximum","Thrust equals drag"], answer:1, exp:"Jet: best RATE of climb = maximum excess power. Best ANGLE of climb = maximum excess thrust."},
+
+  // ===== WIZZ AIR DATA =====
+  {topic:"Wizz Air Data", q:"Wizz Air was established in:", options:["September 2001","September 2003","May 2004","January 2005"], answer:1, exp:"Wizz Air was established in September 2003. The first flight was from Katowice on 19 May 2004."},
+  {topic:"Wizz Air Data", q:"Wizz Air headquarters is located at:", options:["Warsaw Chopin Airport","Vienna International Airport","Budapest International Airport","Bucharest Henri Coandă Airport"], answer:2, exp:"Wizz Air headquarters: Budapest International Airport, Budapest. Financial office: Geneva."},
+  {topic:"Wizz Air Data", q:"Wizz Air IATA code is:", options:["WZ","W6","WZZ","WA"], answer:1, exp:"IATA code: W6. ICAO code: WZZ. Callsign: WizzAir."},
+  {topic:"Wizz Air Data", q:"Wizz Air's lead investor is:", options:["Ryanair Holdings","Indigo Partners (American private equity)","IAG Capital","Lufthansa Group"], answer:1, exp:"Lead investor: Indigo Partners — an American private equity firm specializing in transportation investments."},
+  {topic:"Wizz Air Data", q:"Wizz Air A320 uses which engine?", options:["CFM56-5B","GE90","International Aero Engines V2500","Rolls-Royce Trent 700"], answer:2, exp:"Wizz Air A320-232 uses IAE (International Aero Engines) V2500 engines. Bypass: 4.8:1. Thrust: 26,400 lbs."},
+  {topic:"Wizz Air Data", q:"Wizz Air company slogan is:", options:["More for less","Fly smarter","Now we can all fly","Europe's low-cost leader"], answer:2, exp:"Wizz Air slogan: 'Now we can all fly.'"},
+];
+
+// ===== STATE =====
+let selectedTopics = new Set();
+let quizQuestions = [];
+let currentIdx = 0;
+let answers = {}; // idx -> chosen option index
+let score = 0;
+
+const topicNames = [...new Set(QUESTIONS.map(q=>q.topic))];
+
+// ===== INIT =====
+function init() {
+  document.getElementById('totalQCount').textContent = QUESTIONS.length;
+  const grid = document.getElementById('topicGrid');
+  grid.innerHTML = '';
+  topicNames.forEach(t => {
+    const count = QUESTIONS.filter(q=>q.topic===t).length;
+    const div = document.createElement('div');
+    div.className = 'topic-card' + (selectedTopics.has(t) ? ' selected' : '');
+    div.dataset.topic = t;
+    div.onclick = () => toggleTopic(t, div);
+    div.innerHTML = `
+      <div class="topic-code">${t.split('–')[0].trim()}</div>
+      <div class="topic-name">${t.split('–').slice(1).join('–').trim() || t}</div>
+      <div class="topic-count">${count} questions</div>
+      <div class="topic-check">✓</div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function toggleTopic(t, div) {
+  if(selectedTopics.has(t)) { selectedTopics.delete(t); div.classList.remove('selected'); }
+  else { selectedTopics.add(t); div.classList.add('selected'); }
+  updateStartBtn();
+}
+function selectAll() { topicNames.forEach(t => selectedTopics.add(t)); init(); updateStartBtn(); }
+function selectNone() { selectedTopics.clear(); init(); updateStartBtn(); }
+function updateStartBtn() {
+  document.getElementById('startBtn').disabled = selectedTopics.size === 0;
+}
+
+// ===== START QUIZ =====
+function startQuiz() {
+  let pool = QUESTIONS.filter(q => selectedTopics.has(q.topic));
+  const mode = document.getElementById('modeSelect').value;
+  if(mode === 'random') pool = pool.sort(() => Math.random() - 0.5);
+  const countVal = document.getElementById('qCountSelect').value;
+  if(countVal !== 'all') pool = pool.slice(0, parseInt(countVal));
+  quizQuestions = pool;
+  answers = {};
+  score = 0;
+  currentIdx = 0;
+
+  document.getElementById('topicView').style.display = 'none';
+  document.getElementById('quizView').style.display = 'block';
+  document.getElementById('homeBtn').style.display = 'block';
+  document.getElementById('headerScore').style.display = 'block';
+  updateHeaderScore();
+  buildNavGrid();
+  renderQuestion();
+}
+
+function buildNavGrid() {
+  const grid = document.getElementById('qNavGrid');
+  grid.innerHTML = '';
+  quizQuestions.forEach((q,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-nav-btn' + (i===currentIdx ? ' current':'');
+    btn.textContent = i+1;
+    btn.id = 'nav-'+i;
+    btn.onclick = () => { currentIdx = i; renderQuestion(); };
+    grid.appendChild(btn);
+  });
+}
+
+function updateNavGrid() {
+  quizQuestions.forEach((q,i) => {
+    const btn = document.getElementById('nav-'+i);
+    if(!btn) return;
+    btn.className = 'q-nav-btn';
+    if(i === currentIdx) btn.classList.add('current');
+    if(answers[i] !== undefined) {
+      btn.classList.add(answers[i] === quizQuestions[i].answer ? 'answered-correct' : 'answered-wrong');
+    }
+  });
+}
+
+// ===== RENDER QUESTION =====
+function renderQuestion() {
+  const q = quizQuestions[currentIdx];
+  const total = quizQuestions.length;
+  const answered = Object.keys(answers).length;
+
+  document.getElementById('progressFill').style.width = ((answered/total)*100)+'%';
+  document.getElementById('progressLabel').textContent = `${answered}/${total}`;
+  document.getElementById('currentTopic').textContent = q.topic;
+  document.getElementById('qNumber').textContent = `Question ${currentIdx+1} of ${total}`;
+  document.getElementById('qText').textContent = q.q;
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  const chosen = answers[currentIdx];
+  const revealed = chosen !== undefined;
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    if(revealed) {
+      btn.disabled = true;
+      if(i === q.answer) btn.classList.add('correct');
+      else if(i === chosen && i !== q.answer) btn.classList.add('wrong');
+      else btn.classList.add('dimmed');
+    }
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span><span>${opt}</span>`;
+    if(!revealed) btn.onclick = () => selectAnswer(i);
+    grid.appendChild(btn);
+  });
+
+  const expBox = document.getElementById('explanationBox');
+  if(revealed) {
+    expBox.innerHTML = `<div class="explanation-box"><strong>Explanation</strong>${q.exp}</div>`;
+  } else { expBox.innerHTML = ''; }
+
+  document.getElementById('prevBtn').disabled = currentIdx === 0;
+  document.getElementById('nextBtn').disabled = currentIdx === total - 1;
+
+  const allAnswered = Object.keys(answers).length === total;
+  document.getElementById('finishBtn').style.display = allAnswered ? 'block' : 'none';
+
+  updateNavGrid();
+  updateHeaderScore();
+}
+
+function selectAnswer(i) {
+  if(answers[currentIdx] !== undefined) return;
+  answers[currentIdx] = i;
+  if(i === quizQuestions[currentIdx].answer) score++;
+  updateHeaderScore();
+  renderQuestion();
+  // auto-advance after delay
+  if(currentIdx < quizQuestions.length - 1) {
+    setTimeout(() => { currentIdx++; renderQuestion(); }, 1100);
+  }
+}
+
+function navigate(dir) {
+  const newIdx = currentIdx + dir;
+  if(newIdx < 0 || newIdx >= quizQuestions.length) return;
+  currentIdx = newIdx;
+  renderQuestion();
+}
+
+function updateHeaderScore() {
+  const total = quizQuestions.length;
+  document.getElementById('headerScoreVal').textContent = `${score}/${total}`;
+}
+
+// ===== RESULTS =====
+function finishQuiz() {
+  document.getElementById('quizView').style.display = 'none';
+  document.getElementById('resultsView').style.display = 'block';
+
+  const total = quizQuestions.length;
+  const pct = Math.round((score/total)*100);
+
+  const scoreEl = document.getElementById('resultScore');
+  scoreEl.textContent = pct + '%';
+  scoreEl.className = 'result-score ' + (pct>=80?'great':pct>=60?'ok':'poor');
+  document.getElementById('resultLabel').textContent = pct>=80?'Excellent — Ready for the interview!':pct>=60?'Good — Keep studying!':'Needs more work — Review your notes';
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent = total - score;
+  document.getElementById('statTotal').textContent = total;
+
+  // Topic breakdown
+  const breakdownDiv = document.getElementById('topicBreakdown');
+  const topicStats = {};
+  quizQuestions.forEach((q,i) => {
+    if(!topicStats[q.topic]) topicStats[q.topic] = {correct:0,total:0};
+    topicStats[q.topic].total++;
+    if(answers[i] === q.answer) topicStats[q.topic].correct++;
+  });
+  let html = '<div class="breakdown-title">Topic Breakdown</div>';
+  Object.entries(topicStats).forEach(([topic, stats]) => {
+    const p = Math.round((stats.correct/stats.total)*100);
+    const col = p>=80?'var(--green)':p>=60?'var(--gold)':'var(--red)';
+    html += `<div class="breakdown-row">
+      <div class="breakdown-name">${topic.split('–').pop().trim()}</div>
+      <div class="breakdown-bar-track"><div class="breakdown-bar-fill" style="width:${p}%;background:${col}"></div></div>
+      <div class="breakdown-pct" style="color:${col}">${p}%</div>
+    </div>`;
+  });
+  breakdownDiv.innerHTML = html;
+}
+
+function reviewWrong() {
+  const wrongIdxs = Object.keys(answers).filter(i => answers[i] !== quizQuestions[i].answer).map(Number);
+  if(wrongIdxs.length === 0) { alert('No wrong answers to review! 🎉'); return; }
+  quizQuestions = wrongIdxs.map(i => quizQuestions[i]);
+  answers = {};
+  score = 0;
+  currentIdx = 0;
+  document.getElementById('resultsView').style.display = 'none';
+  document.getElementById('quizView').style.display = 'block';
+  buildNavGrid();
+  renderQuestion();
+}
+
+function goHome() {
+  document.getElementById('quizView').style.display = 'none';
+  document.getElementById('resultsView').style.display = 'none';
+  document.getElementById('topicView').style.display = 'block';
+  document.getElementById('homeBtn').style.display = 'none';
+  document.getElementById('headerScore').style.display = 'none';
+  init();
+}
+
+// Start
+selectAll();
+init();
+updateStartBtn();
+</script>
+
+</body>
+</html>
